@@ -11,7 +11,8 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 public class ApplicationConfig {
     @Value("${server.name}")
     private String serverName;
-
+    @Value("${security.jwt.secret}")
+    private String securityJwtSecret;
 
     @Bean
     public ResourceBundleMessageSource messageSource() {
@@ -25,5 +26,9 @@ public class ApplicationConfig {
 
     public String getServerName() {
         return serverName;
+    }
+
+    public String getSecurityJwtSecret() {
+        return securityJwtSecret;
     }
 }

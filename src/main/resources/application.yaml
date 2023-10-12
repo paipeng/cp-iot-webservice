@@ -8,6 +8,10 @@ spring:
       hibernate:
         format_sql:true
   datasource:
-    url: jdbc:mysql://localhost:3306/idcard_db
-    username: idcard
-    password: fYl4oi8s+kFr
+    url: jdbc:mysql://localhost:3306/iot_db
+    username: iot
+    password: Bf1R7qGihfAN
+
+security:
+  jwt:
+    secret: 5161127a80ff47a1855176c345a1de39833b486ea3dd40629081ab0370a1632c87496492fb634c60a458182c69a7f0d0
