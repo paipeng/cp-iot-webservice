@@ -1,4 +1,4 @@
-# cp-iot-webservice
+# CP-IoT-Webservice
 Restful API webservice for IoT
 
 JDK 17
