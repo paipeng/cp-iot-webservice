@@ -1,0 +1,13 @@
+server:
+  name: CP IoT Webservice
+
+spring:
+  jpa:
+    hibernate.ddl-auto: update
+    properties:
+      hibernate:
+        format_sql:true
+  datasource:
+    url: jdbc:mysql://localhost:3306/idcard_db
+    username: idcard
+    password: fYl4oi8s+kFr
