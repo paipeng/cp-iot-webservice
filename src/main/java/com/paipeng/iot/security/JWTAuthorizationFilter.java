@@ -4,6 +4,8 @@ package com.paipeng.iot.security;
 import com.paipeng.iot.config.ApplicationConfig;
 import com.paipeng.iot.entity.User;
 import com.paipeng.iot.repository.UserRepository;
+import com.paipeng.iot.service.CustomUserDetailsService;
+import com.paipeng.iot.service.JwtService;
 import io.jsonwebtoken.*;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
@@ -16,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -39,6 +44,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+    @Autowired
+    private JwtService jwtService;
     @Override
     protected void doFilterInternal(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
         logger.info("doFilterInternal " + request.getRemoteHost() + " " + request.getMethod() + " " + request.getRequestURI());
@@ -46,8 +55,18 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         try {
             if (checkJWTToken(request, response)) {
                 logger.info("jwt token found");
-                String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
+                final String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
                 logger.info("jwtToken: " + jwtToken);
+
+                final String username = jwtService.extraceUsername(jwtToken);
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                    if (jwtService.isTokenValid(jwtToken, userDetails)) {
+                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                    }
+                }
 
                 User user = userRepository.findByToken(jwtToken);
 
