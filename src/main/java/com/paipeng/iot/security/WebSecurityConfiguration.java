@@ -63,6 +63,7 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/version").permitAll()
                                 .requestMatchers("/tests/**").permitAll()
+                                .requestMatchers("/login/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 
@@ -74,7 +75,7 @@ public class WebSecurityConfiguration {
     }
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/js/**", "/images/**");
+        return (web) -> web.ignoring().requestMatchers("/js/**", "/images/**", "/favicon.ico");
     }
 
 }
