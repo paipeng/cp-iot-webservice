@@ -2,40 +2,49 @@ package com.paipeng.iot.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "device")
 public class Device extends BaseEntity {
+    @Column(name = "uuid", nullable = false, length = 36, unique = true)
+    private String uuid;
     @Column(nullable = false, length = 64, unique = true)
-    private String owner;
+    private String name;
 
-    @Column(name = "app", nullable = false, length = 64)
-    private String app;
+    @Column(name = "description", nullable = true, length = 64)
+    private String description;
 
     @Column(name = "expire", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp expire;
 
-    @Column(name = "nanogrid", columnDefinition = "bit default 0 ", nullable = false)
-    private boolean nanogrid;
+    @Column(name = "led", columnDefinition = "bit default 0 ", nullable = false)
+    private boolean led;
 
+    @Column(name = "temperature", columnDefinition = "bit default 0 ", nullable = false)
+    private boolean temperature;
 
-    @Column(name = "file_path", nullable = true, length = 128)
-    private String filePath;
+    @Column(name = "photosensitive", columnDefinition = "bit default 0 ", nullable = false)
+    private boolean photosensitive;
 
+    @Column(name = "message_board", columnDefinition = "bit default 0 ", nullable = false)
+    private boolean messageBoard;
 
-    @Column(name = "uuid", nullable = false, length = 36, unique = true)
-    private String uuid;
+    @Column(name = "voice_control", columnDefinition = "bit default 0 ", nullable = false)
+    private boolean voiceControl;
+    @Column(name = "location", nullable = true, length = 128)
+    private String location;
 
+    @Column(name = "latitude", precision = 11, scale = 8)
+    private BigDecimal latitude;
 
-    @Column(name = "signature", length = 512)
-    private String signature;
+    @Column(name = "longitude", precision = 11, scale = 8)
+    private BigDecimal longitude;
+
 
 
 
@@ -44,20 +53,20 @@ public class Device extends BaseEntity {
     private List<User> users;
 
 
-    public String getOwner() {
-        return owner;
+    public String getName() {
+        return name;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getApp() {
-        return app;
+    public String getDescription() {
+        return description;
     }
 
-    public void setApp(String app) {
-        this.app = app;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Timestamp getExpire() {
@@ -68,12 +77,12 @@ public class Device extends BaseEntity {
         this.expire = expire;
     }
 
-    public boolean isNanogrid() {
-        return nanogrid;
+    public boolean isLed() {
+        return led;
     }
 
-    public void setNanogrid(boolean nanogrid) {
-        this.nanogrid = nanogrid;
+    public void setLed(boolean led) {
+        this.led = led;
     }
 
     public List<User> getUsers() {
@@ -84,13 +93,12 @@ public class Device extends BaseEntity {
         this.users = users;
     }
 
-    @JsonIgnore
-    public String getFilePath() {
-        return filePath;
+    public boolean getPhotosensitive() {
+        return photosensitive;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setPhotosensitive(boolean photosensitive) {
+        this.photosensitive = photosensitive;
     }
 
     public String getUuid() {
@@ -101,22 +109,65 @@ public class Device extends BaseEntity {
         this.uuid = uuid;
     }
 
-    public String getSignature() {
-        return signature;
+    public boolean isTemperature() {
+        return temperature;
     }
 
-    public void setSignature(String signature) {
-        this.signature = signature;
+    public void setTemperature(boolean temperature) {
+        this.temperature = temperature;
     }
 
+    public boolean isPhotosensitive() {
+        return photosensitive;
+    }
+
+    public boolean isMessageBoard() {
+        return messageBoard;
+    }
+
+    public void setMessageBoard(boolean messageBoard) {
+        this.messageBoard = messageBoard;
+    }
+
+    public boolean isVoiceControl() {
+        return voiceControl;
+    }
+
+    public void setVoiceControl(boolean voiceControl) {
+        this.voiceControl = voiceControl;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
+    }
 
     @JsonIgnore
     public List<String> getFeatureStrings() {
         List<String> featureStrings = new ArrayList<>();
-        featureStrings.add("owner:STRING=" + getOwner());
+        featureStrings.add("owner:STRING=" + getName());
         featureStrings.add("uuid:STRING=" + getUuid());
         featureStrings.add("expire:DATE=" + getExpire());
-        featureStrings.add("nanogrid:INT=" + (isNanogrid()?"1":"0"));
+        featureStrings.add("nanogrid:INT=" + (isLed()?"1":"0"));
         return featureStrings;
     }
 }
