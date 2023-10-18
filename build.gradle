@@ -24,6 +24,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+
+	implementation 'org.springframework.boot:spring-boot-starter-integration'
+	implementation 'org.springframework.integration:spring-integration-stream'
+	implementation 'org.springframework.integration:spring-integration-mqtt'
+
 	implementation 'mysql:mysql-connector-java:8.0.33'
 	// https://mvnrepository.com/artifact/com.auth0/java-jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.2'
@@ -35,8 +41,6 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/commons-io/commons-io
 	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
-
-	implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
 
 	// https://mvnrepository.com/artifact/org.projectlombok/lombok
 	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
