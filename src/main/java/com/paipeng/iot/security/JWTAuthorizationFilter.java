@@ -12,28 +12,19 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.*;
 
-@Component
-@RequiredArgsConstructor
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
-    private final static Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
+//    private final static Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
     private final static String HEADER = "Authorization";
     private final static String PREFIX = "Bearer ";
     //public static final String SECRET = "";
@@ -59,15 +50,20 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 logger.info("jwtToken: " + jwtToken);
 
                 final String username = jwtService.extraceUsername(jwtToken);
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-                    if (jwtService.isTokenValid(jwtToken, userDetails)) {
-                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                        usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                logger.info("username: " + username);
+                if (username != null) {
+                    if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                        User user = customUserDetailsService.loadUserByUsername(username);
+                        if (jwtService.isTokenValid(jwtToken, user)) {
+                            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                            usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                        }
                     }
+                } else {
+                    logger.error("validateToken failed");
                 }
-
+/*
                 User user = userRepository.findByToken(jwtToken);
 
                 Claims claims = validateToken(jwtToken, user);
@@ -77,6 +73,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                     logger.error("validateToken failed");
                     SecurityContextHolder.clearContext();
                 }
+ */
             } else {
                 logger.error("checkJWTToken failed");
                 SecurityContextHolder.clearContext();
