@@ -31,7 +31,7 @@ public class User extends BaseEntity implements UserDetails {
     private String lastName;
 
 
-    @Column(name = "token", length = 512)
+    @Transient
     private String token;
 
     @Enumerated(EnumType.STRING)

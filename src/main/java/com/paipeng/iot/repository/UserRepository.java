@@ -12,9 +12,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     User findByEmailAndPassword(String email, String password);
-
-    @Query("SELECT u FROM User u WHERE u.token is not null")
-    List<User> findUsersWithToken();
-
-    User findByToken(String token);
 }
