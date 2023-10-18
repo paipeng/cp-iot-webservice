@@ -38,5 +38,5 @@ mqtt:
   connection-timeout: 1000
   subscription-topic:
     - topicA
-    - $share/group1/hello
-    - $share/group1/hello1
+    - share/group1/hello
+    - share/group1/hello1
