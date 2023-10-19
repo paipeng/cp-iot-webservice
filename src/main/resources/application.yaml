@@ -40,3 +40,8 @@ mqtt:
     - topicA
     - share/group1/hello
     - share/group1/hello1
+  cleanSession: true
+  reconnect: true
+  timeout: 100
+  keepAlive: 100
+  qos: 2
