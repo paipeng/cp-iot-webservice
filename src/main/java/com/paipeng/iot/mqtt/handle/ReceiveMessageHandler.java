@@ -14,11 +14,7 @@ public class ReceiveMessageHandler implements MessageHandler {
         logger.info("handleMessage");
         String topic = message.getHeaders().get("mqtt_receivedTopic").toString();
         logger.info("topic: " + topic);
-        if ("hello".equalsIgnoreCase(topic)) {
-            System.out.println("hello, " + message.getPayload().toString());
-        } else {
-            System.out.println("hi, " + message.getPayload().toString());
-        }
+        logger.info("message: " + message.getPayload().toString());
     }
 
 }
