@@ -2,6 +2,8 @@ package com.paipeng.iot.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -45,6 +47,8 @@ public class Device extends BaseEntity {
     @Column(name = "longitude", precision = 11, scale = 8)
     private BigDecimal longitude;
 
+    @Column(name = "online", columnDefinition = "bit default 0 ", nullable = false)
+    private boolean online;
 
 
 
@@ -52,6 +56,9 @@ public class Device extends BaseEntity {
     @JoinTable(name = "device_user", joinColumns = @JoinColumn(name = "device_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users;
 
+    @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "device")
+    @LazyCollection(value = LazyCollectionOption.EXTRA)
+    private List<Record> records;
 
     public String getName() {
         return name;
@@ -159,6 +166,23 @@ public class Device extends BaseEntity {
 
     public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+
+    @JsonIgnore
+    public List<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(List<Record> records) {
+        this.records = records;
     }
 
     @JsonIgnore
