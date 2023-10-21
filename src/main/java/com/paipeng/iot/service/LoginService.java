@@ -40,15 +40,20 @@ public class LoginService {
     }
 
     public User login(User user) throws Exception {
-        logger.info("login: " + user.getEmail());
+        logger.info("login: " + user.getUsername());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        user.getEmail(),
+                        user.getUsername(),
                         user.getPassword()
                 )
         );
-        User existUser = userRepository.findByEmail(user.getEmail()).orElse(null);
+
+        logger.info("find by username: " + user.getUsername());
+        User existUser = userRepository.findByUsername(user.getUsername()).orElse(null);
+
+        logger.info("existUser: " + existUser);
         if (existUser != null) {
+            logger.info("existUser found: " + existUser.getId());
             var jwtToken = jwtService.generateToken(existUser);
             existUser.setToken(jwtToken);
             return existUser;

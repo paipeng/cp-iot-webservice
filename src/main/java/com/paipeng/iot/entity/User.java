@@ -19,6 +19,9 @@ import java.util.List;
 public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false, unique = true, length = 45)
+    private String username;
+
+    @Column(nullable = true, unique = false, length = 64)
     private String email;
 
     @Column(nullable = false, length = 64)
@@ -63,7 +66,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     public Role getRole() {
@@ -129,5 +132,9 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
