@@ -38,6 +38,11 @@ public class Record extends BaseEntity {
     }
 
 
+    @Transient
+    public String getDeviceName() {
+        return device.getName();
+    }
+
     public RecordType getRecordType() {
         return recordType;
     }
