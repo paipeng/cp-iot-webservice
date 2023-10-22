@@ -10,6 +10,7 @@ public enum RecordType {
     PHOTOSENSITIVE,
     MESSAGE,
     VOICE,
-    DEVICE_STATE
+    DEVICE_STATE,
+    PING
 
 }
