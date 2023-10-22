@@ -1,5 +1,6 @@
 package com.paipeng.iot.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
@@ -27,6 +28,7 @@ public class Record extends BaseEntity {
     @Column(name = "value", columnDefinition = "float default 0.0", nullable = false)
     private float value;
 
+    @JsonIgnore
     public Device getDevice() {
         return device;
     }
