@@ -54,4 +54,20 @@ public class MqttController {
             throw new RuntimeException(e);
         }
     }
+
+    @GetMapping(value = "/ping", produces = {"application/json;charset=UTF-8"})
+    public void testMqttPings() {
+        CPIOTPing cpiotPing = new CPIOTPing();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String topic = "CP_IOT/PING";
+            String data = objectMapper.writeValueAsString(cpiotPing);
+            logger.info("send broadcasting ping");
+            logger.info("sendToMqtt topic: " + topic);
+            logger.info("sendToMqtt data: " + data);
+            mqttGateway.sendToMqtt(data, topic);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
