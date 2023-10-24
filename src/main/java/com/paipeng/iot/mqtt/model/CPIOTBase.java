@@ -22,6 +22,6 @@ public abstract class CPIOTBase {
 
     @Override
     public String toString() {
-        return super.toString() + " deviceUuid: " + udid + " serverName: " + serverName;
+        return super.toString() + " udid: " + udid + " serverName: " + serverName;
     }
 }
