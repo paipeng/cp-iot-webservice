@@ -64,6 +64,7 @@ public class WebSecurityConfiguration {
                         auth.requestMatchers("/version").permitAll()
                                 .requestMatchers("/tests/**").permitAll()
                                 .requestMatchers("/login/**").permitAll()
+                                .requestMatchers("/websocket/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 
