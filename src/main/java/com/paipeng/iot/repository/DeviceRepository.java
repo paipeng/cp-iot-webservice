@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DeviceRepository extends JpaRepository<Device, Long> {
-    Optional<Device> findByUuid(String uuid);
+    Optional<Device> findByUdid(String uuid);
 
     List<Device> findDevicesByUsersId(Long userId);
 
