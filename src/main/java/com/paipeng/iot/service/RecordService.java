@@ -40,7 +40,7 @@ public class RecordService extends BaseService {
 
     public void updatePong(CPIOTPing cpiotPing) {
         logger.info("updatePong: " + cpiotPing);
-        Device device = deviceRepository.findByUuid(cpiotPing.getDeviceUuid()).orElse(null);
+        Device device = deviceRepository.findByUuid(cpiotPing.getUdid()).orElse(null);
         if (device != null) {
             Record record = new Record();
             record.setDevice(device);

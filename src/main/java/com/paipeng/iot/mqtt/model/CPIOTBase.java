@@ -1,15 +1,15 @@
 package com.paipeng.iot.mqtt.model;
 
 public abstract class CPIOTBase {
-    protected String deviceUuid;
+    protected String udid;
     protected String serverName;
 
-    public String getDeviceUuid() {
-        return deviceUuid;
+    public String getUdid() {
+        return udid;
     }
 
-    public void setDeviceUuid(String deviceUuid) {
-        this.deviceUuid = deviceUuid;
+    public void setUdid(String udid) {
+        this.udid = udid;
     }
 
     public String getServerName() {
@@ -22,6 +22,6 @@ public abstract class CPIOTBase {
 
     @Override
     public String toString() {
-        return super.toString() + " deviceUuid: " + deviceUuid + " serverName: " + serverName;
+        return super.toString() + " deviceUuid: " + udid + " serverName: " + serverName;
     }
 }
