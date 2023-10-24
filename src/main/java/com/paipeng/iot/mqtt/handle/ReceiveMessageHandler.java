@@ -29,8 +29,8 @@ public class ReceiveMessageHandler implements MessageHandler {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            if (topic.equals("CP_IOT_PONG")) {
-                logger.info("CP_IOT_PONG");
+            if (topic.equals("CP_IOT/PONG")) {
+                logger.info("CP_IOT/PONG");
                 CPIOTPing cpiotPing = objectMapper.readValue(message.getPayload().toString(), CPIOTPing.class);
                 if (cpiotPing != null) {
                     recordService.updatePong(cpiotPing);
