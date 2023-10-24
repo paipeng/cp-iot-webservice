@@ -30,6 +30,8 @@ dependencies {
 	implementation 'org.springframework.integration:spring-integration-stream'
 	implementation 'org.springframework.integration:spring-integration-mqtt'
 
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
 	implementation 'mysql:mysql-connector-java:8.0.33'
 	// https://mvnrepository.com/artifact/com.auth0/java-jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.2'
