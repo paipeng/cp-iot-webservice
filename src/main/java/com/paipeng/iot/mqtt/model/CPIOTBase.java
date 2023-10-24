@@ -4,6 +4,8 @@ public abstract class CPIOTBase {
     protected String udid;
     protected String serverName;
 
+    private int state;
+
     public String getUdid() {
         return udid;
     }
@@ -20,8 +22,16 @@ public abstract class CPIOTBase {
         this.serverName = serverName;
     }
 
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
-        return super.toString() + " udid: " + udid + " serverName: " + serverName;
+        return super.toString() + " udid: " + udid + " serverName: " + serverName  + " state: " + state;
     }
 }

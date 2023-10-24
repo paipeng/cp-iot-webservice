@@ -3,6 +3,7 @@ package com.paipeng.iot.mqtt.handle;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paipeng.iot.mqtt.model.CPIOTPing;
+import com.paipeng.iot.mqtt.model.CPIOTTemperature;
 import com.paipeng.iot.service.RecordService;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;
@@ -34,6 +35,12 @@ public class ReceiveMessageHandler implements MessageHandler {
                 CPIOTPing cpiotPing = objectMapper.readValue(message.getPayload().toString(), CPIOTPing.class);
                 if (cpiotPing != null) {
                     recordService.updatePong(cpiotPing);
+                }
+            } else if (topic.equals("CP_IOT/TEMPERATURE")) {
+                logger.info("CP_IOT/TEMPERATURE");
+                CPIOTTemperature cpiotTemperature = objectMapper.readValue(message.getPayload().toString(), CPIOTTemperature.class);
+                if (cpiotTemperature != null) {
+                    recordService.updateTemperature(cpiotTemperature);
                 }
             }
         } catch (JsonProcessingException e) {

@@ -4,6 +4,7 @@ import com.paipeng.iot.entity.Device;
 import com.paipeng.iot.entity.Record;
 import com.paipeng.iot.entity.RecordType;
 import com.paipeng.iot.mqtt.model.CPIOTPing;
+import com.paipeng.iot.mqtt.model.CPIOTTemperature;
 import com.paipeng.iot.repository.DeviceRepository;
 import com.paipeng.iot.repository.RecordRepository;
 import org.apache.logging.log4j.LogManager;
@@ -46,6 +47,21 @@ public class RecordService extends BaseService {
             record.setDevice(device);
             record.setState(cpiotPing.getState());
             record.setRecordType(RecordType.PING);
+            recordRepository.saveAndFlush(record);
+        } else {
+            logger.error("device not found!");
+        }
+    }
+
+    public void updateTemperature(CPIOTTemperature cpiotTemperature) {
+        logger.info("updateTemperature: " + cpiotTemperature);
+        Device device = deviceRepository.findByUdid(cpiotTemperature.getUdid()).orElse(null);
+        if (device != null) {
+            Record record = new Record();
+            record.setDevice(device);
+            record.setState(cpiotTemperature.getState());
+            record.setRecordType(RecordType.TEMPERATURE);
+            record.setValue(cpiotTemperature.getValue());
             recordRepository.saveAndFlush(record);
         } else {
             logger.error("device not found!");
