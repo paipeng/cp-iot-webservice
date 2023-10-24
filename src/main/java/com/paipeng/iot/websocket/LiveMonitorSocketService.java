@@ -1,5 +1,7 @@
 package com.paipeng.iot.websocket;
 
+import com.paipeng.iot.entity.Record;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

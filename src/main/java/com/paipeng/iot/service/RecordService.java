@@ -7,6 +7,7 @@ import com.paipeng.iot.mqtt.model.CPIOTPing;
 import com.paipeng.iot.mqtt.model.CPIOTTemperature;
 import com.paipeng.iot.repository.DeviceRepository;
 import com.paipeng.iot.repository.RecordRepository;
+import com.paipeng.iot.websocket.LiveMonitorSocketService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class RecordService extends BaseService {
 
     @Autowired
     private DeviceRepository deviceRepository;
+
+    @Autowired
+    private LiveMonitorSocketService liveMonitorSocketService;
 
     public List<Record> query() {
         logger.info("query");
@@ -63,6 +67,9 @@ public class RecordService extends BaseService {
             record.setRecordType(RecordType.TEMPERATURE);
             record.setValue(cpiotTemperature.getValue());
             recordRepository.saveAndFlush(record);
+
+            // UPDATE send to web via websocket
+            liveMonitorSocketService.sendData(record);
         } else {
             logger.error("device not found!");
         }
