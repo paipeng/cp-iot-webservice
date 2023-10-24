@@ -13,8 +13,8 @@ import java.util.List;
 @Entity
 @Table(name = "device")
 public class Device extends BaseEntity {
-    @Column(name = "uuid", nullable = false, length = 36, unique = true)
-    private String uuid;
+    @Column(name = "udid", nullable = false, length = 36, unique = true)
+    private String udid;
     @Column(nullable = false, length = 64, unique = true)
     private String name;
 
@@ -108,12 +108,12 @@ public class Device extends BaseEntity {
         this.photosensitive = photosensitive;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getUdid() {
+        return udid;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setUdid(String udid) {
+        this.udid = udid;
     }
 
     public boolean isTemperature() {
@@ -189,7 +189,7 @@ public class Device extends BaseEntity {
     public List<String> getFeatureStrings() {
         List<String> featureStrings = new ArrayList<>();
         featureStrings.add("owner:STRING=" + getName());
-        featureStrings.add("uuid:STRING=" + getUuid());
+        featureStrings.add("udid:STRING=" + getUdid());
         featureStrings.add("expire:DATE=" + getExpire());
         featureStrings.add("nanogrid:INT=" + (isLed()?"1":"0"));
         return featureStrings;
