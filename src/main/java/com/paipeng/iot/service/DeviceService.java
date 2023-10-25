@@ -1,10 +1,13 @@
 package com.paipeng.iot.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paipeng.iot.entity.Device;
 import com.paipeng.iot.entity.Record;
 import com.paipeng.iot.entity.RecordType;
 import com.paipeng.iot.entity.User;
 import com.paipeng.iot.mqtt.gateway.MqttGateway;
+import com.paipeng.iot.mqtt.model.CPIOTLed;
 import com.paipeng.iot.repository.DeviceRepository;
 import com.paipeng.iot.repository.RecordRepository;
 import com.paipeng.iot.repository.UserRepository;
@@ -72,7 +75,21 @@ public class DeviceService extends BaseService {
         // MQTT send command to IoT
         String topic = "CP_IOT/" + device.getUdid() + "/LED";
         logger.info("send mqtt to topic: " + topic);
-        mqttGateway.sendToMqtt(""+ state, topic);
+
+
+        CPIOTLed cpiotLed = new CPIOTLed();
+        cpiotLed.setUdid(device.getUdid());
+        cpiotLed.setState(state);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(cpiotLed);
+            logger.info("sendToMqtt json: " + json);
+            mqttGateway.sendToMqtt(json, topic);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
         return device;
     }
 }
