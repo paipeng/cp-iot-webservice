@@ -11,6 +11,7 @@ public enum RecordType {
     MESSAGE,
     VOICE,
     DEVICE_STATE,
-    PING
+    PING,
+    LED
 
 }

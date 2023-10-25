@@ -38,4 +38,9 @@ public class DeviceController {
     public void delete(@NotNull @PathVariable("id") Long id) throws Exception {
         deviceService.delete(id);
     }
+
+    @GetMapping(value = "/{id}/led/{state}", produces = {"application/json;charset=UTF-8"})
+    public Device updateLedState(@NotNull @PathVariable("id") Long id, @NotNull @PathVariable("state") int state, HttpServletResponse httpServletResponse) throws Exception {
+        return deviceService.updateLedState(id, state);
+    }
 }

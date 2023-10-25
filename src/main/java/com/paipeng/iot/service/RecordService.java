@@ -32,7 +32,7 @@ public class RecordService extends BaseService {
     public List<Record> query() {
         logger.info("query");
         List<Record> records =  recordRepository.findAll();
-        logger.info("records: " + records);
+        logger.info("records: " + records.size());
         return records;
     }
     public Record query(Long id) {
