@@ -7,6 +7,7 @@ import com.paipeng.iot.entity.Record;
 import com.paipeng.iot.entity.RecordType;
 import com.paipeng.iot.entity.User;
 import com.paipeng.iot.mqtt.gateway.MqttGateway;
+import com.paipeng.iot.mqtt.model.CPIOMessageBoard;
 import com.paipeng.iot.mqtt.model.CPIOTLed;
 import com.paipeng.iot.repository.DeviceRepository;
 import com.paipeng.iot.repository.RecordRepository;
@@ -84,6 +85,31 @@ public class DeviceService extends BaseService {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String json = objectMapper.writeValueAsString(cpiotLed);
+            logger.info("sendToMqtt json: " + json);
+            mqttGateway.sendToMqtt(json, topic);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return device;
+    }
+
+    public Device updateMessageBoard(Long id, CPIOMessageBoard messageBoard) {
+        logger.info("updateMessageBoard: " + id + " messageBoard: " + messageBoard);
+        Device device = deviceRepository.findById(id).orElseThrow(() -> new RuntimeException());
+        Record record = new Record();
+        record.setDevice(device);
+        record.setMessage(messageBoard.getMessage());
+        record.setRecordType(RecordType.MESSAGE_BOARD);
+        recordRepository.saveAndFlush(record);
+
+        // MQTT send command to IoT
+        String topic = "CP_IOT/" + device.getUdid() + "/MESSAGE_BOARD";
+        logger.info("send mqtt to topic: " + topic);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(messageBoard);
             logger.info("sendToMqtt json: " + json);
             mqttGateway.sendToMqtt(json, topic);
         } catch (JsonProcessingException e) {

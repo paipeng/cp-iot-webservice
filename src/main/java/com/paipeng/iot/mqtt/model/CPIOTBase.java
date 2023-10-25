@@ -4,7 +4,7 @@ public abstract class CPIOTBase {
     protected String udid;
     protected String serverName;
 
-    private int state;
+    protected int state;
 
     public String getUdid() {
         return udid;

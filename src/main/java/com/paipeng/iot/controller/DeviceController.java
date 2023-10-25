@@ -1,6 +1,7 @@
 package com.paipeng.iot.controller;
 
 import com.paipeng.iot.entity.Device;
+import com.paipeng.iot.mqtt.model.CPIOMessageBoard;
 import com.paipeng.iot.service.DeviceService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -42,5 +43,11 @@ public class DeviceController {
     @GetMapping(value = "/{id}/led/{state}", produces = {"application/json;charset=UTF-8"})
     public Device updateLedState(@NotNull @PathVariable("id") Long id, @NotNull @PathVariable("state") int state, HttpServletResponse httpServletResponse) throws Exception {
         return deviceService.updateLedState(id, state);
+    }
+
+
+    @PostMapping(value = "/{id}/messageboard", produces = {"application/json;charset=UTF-8"})
+    public Device updateMessageBoard(@NotNull @PathVariable("id") Long id, @RequestBody CPIOMessageBoard messageBoard, HttpServletResponse httpServletResponse) throws Exception {
+        return deviceService.updateMessageBoard(id, messageBoard);
     }
 }

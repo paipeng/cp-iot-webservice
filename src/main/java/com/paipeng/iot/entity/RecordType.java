@@ -8,7 +8,7 @@ public enum RecordType {
     NONE,
     TEMPERATURE,
     PHOTOSENSITIVE,
-    MESSAGE,
+    MESSAGE_BOARD,
     VOICE,
     DEVICE_STATE,
     PING,
