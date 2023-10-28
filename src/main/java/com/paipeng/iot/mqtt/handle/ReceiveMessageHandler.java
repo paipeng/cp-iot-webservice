@@ -23,7 +23,7 @@ public class ReceiveMessageHandler implements MessageHandler {
 
     @Override
     public void handleMessage(Message<?> message) throws MessagingException {
-        logger.info("handleMessage");
+        logger.info("handleMessage MQTT");
         String topic = message.getHeaders().get("mqtt_receivedTopic").toString();
         logger.info("topic: " + topic);
         logger.info("message: " + message.getPayload().toString());
@@ -43,7 +43,7 @@ public class ReceiveMessageHandler implements MessageHandler {
                     recordService.updateTemperature(cpiotTemperature);
                 }
             }
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
