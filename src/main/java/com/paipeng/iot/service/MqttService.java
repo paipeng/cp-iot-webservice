@@ -74,7 +74,7 @@ public class MqttService extends BaseService {
         logger.info("sendPagerMessage");
         // 验证 有效性
         ContactScanCode contactScanCode = contactScanCodeRepository.findByUuid(cpiotPagerMessage.getUuid()).orElse(null);
-        if (contactScanCode != null) {
+        if (contactScanCode != null && checkContactScanCodeValidation(contactScanCode)) {
             // TODO check scan code validation
 
             cpiotPagerMessage.setSender(contactScanCode.getSendUser().getUsername());
@@ -97,10 +97,24 @@ public class MqttService extends BaseService {
                     }
                 }
             }
-
         }
+    }
 
+    public CPIOTPagerMessage pagerValidateContactScanCode(String uuid) {
+        ContactScanCode contactScanCode = contactScanCodeRepository.findByUuid(uuid).orElse(null);
+        if (contactScanCode != null && checkContactScanCodeValidation(contactScanCode)) {
+            CPIOTPagerMessage cpiotPagerMessage = new CPIOTPagerMessage();
+            cpiotPagerMessage.setUuid(uuid);
+            cpiotPagerMessage.setSender(contactScanCode.getSendUser().getUsername());
+            cpiotPagerMessage.setReceiver(contactScanCode.getReceiveUser().getUsername());
 
+            return cpiotPagerMessage;
+        } else {
+            throw new RuntimeException();
+        }
+    }
 
+    private boolean checkContactScanCodeValidation(ContactScanCode contactScanCode) {
+        return (contactScanCode.isValid());
     }
 }

@@ -50,6 +50,12 @@ public class MqttController {
 
     }
 
+    @GetMapping(value = "/pager/{uuid}/validate", produces = {"application/json;charset=UTF-8"})
+    public CPIOTPagerMessage pagerValidateContactScanCode(@NotNull @PathVariable("uuid") String uuid) {
+        return mqttService.pagerValidateContactScanCode(uuid);
+
+    }
+
     @PostMapping(value = "/pager", produces = {"application/json;charset=UTF-8"})
     public void sendPagerMessage(@NotNull @RequestBody CPIOTPagerMessage cpiotPagerMessage, HttpServletResponse httpServletResponse) {
         mqttService.sendPagerMessage(cpiotPagerMessage);
