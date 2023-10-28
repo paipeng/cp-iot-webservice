@@ -1,6 +1,6 @@
 package com.paipeng.iot.mqtt.model;
 
-public class CPIOTBPMessage extends CPIOMessageBoard {
+public class CPIOTPagerMessage extends CPIOMessageBoard {
     private String uuid;
     private String receiver;
 

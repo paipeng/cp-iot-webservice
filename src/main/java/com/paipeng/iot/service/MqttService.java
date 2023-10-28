@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paipeng.iot.entity.Device;
 import com.paipeng.iot.mqtt.gateway.MqttGateway;
-import com.paipeng.iot.mqtt.model.CPIOTBPMessage;
+import com.paipeng.iot.mqtt.model.CPIOTPagerMessage;
 import com.paipeng.iot.mqtt.model.CPIOTPing;
 import com.paipeng.iot.repository.DeviceRepository;
 import org.apache.logging.log4j.LogManager;
@@ -60,15 +60,15 @@ public class MqttService extends BaseService {
         }
     }
 
-    public void sendBPMessage(CPIOTBPMessage cpiotbpMessage) {
-        Device device = deviceRepository.findByUdid(cpiotbpMessage.getUuid()).orElse(null);
+    public void sendPagerMessage(CPIOTPagerMessage cpiotPagerMessage) {
+        Device device = deviceRepository.findByUdid(cpiotPagerMessage.getUuid()).orElse(null);
         if (device != null) {
 
         }
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String topic = "CP_IOT/" + device.getUdid() + "/BP_MESSAGE";
-            String data = objectMapper.writeValueAsString(cpiotbpMessage);
+            String data = objectMapper.writeValueAsString(cpiotPagerMessage);
             logger.info("send bp message ping");
             logger.info("sendToMqtt topic: " + topic);
             logger.info("sendToMqtt data: " + data);

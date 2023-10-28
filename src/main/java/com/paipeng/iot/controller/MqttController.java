@@ -1,10 +1,6 @@
 package com.paipeng.iot.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paipeng.iot.entity.Device;
-import com.paipeng.iot.mqtt.model.CPIOTBPMessage;
-import com.paipeng.iot.mqtt.model.CPIOTPing;
+import com.paipeng.iot.mqtt.model.CPIOTPagerMessage;
 import com.paipeng.iot.service.MqttService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -55,8 +51,8 @@ public class MqttController {
     }
 
     @PostMapping(value = "/bp", produces = {"application/json;charset=UTF-8"})
-    public void sendBPMessage(@NotNull @RequestBody CPIOTBPMessage cpiotbpMessage, HttpServletResponse httpServletResponse) {
-        mqttService.sendBPMessage(cpiotbpMessage);
+    public void sendPagerMessage(@NotNull @RequestBody CPIOTPagerMessage cpiotPagerMessage, HttpServletResponse httpServletResponse) {
+        mqttService.sendPagerMessage(cpiotPagerMessage);
 
     }
 }
