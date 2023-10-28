@@ -51,6 +51,8 @@ public class Device extends BaseEntity {
     private boolean online;
 
 
+    @Column(name = "pager", columnDefinition = "bit default 0 ", nullable = false)
+    private boolean pager;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "device_user", joinColumns = @JoinColumn(name = "device_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
@@ -59,6 +61,8 @@ public class Device extends BaseEntity {
     @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "device")
     @LazyCollection(value = LazyCollectionOption.EXTRA)
     private List<Record> records;
+
+
 
     public String getName() {
         return name;
@@ -174,6 +178,14 @@ public class Device extends BaseEntity {
 
     public void setOnline(boolean online) {
         this.online = online;
+    }
+
+    public boolean isPager() {
+        return pager;
+    }
+
+    public void setPager(boolean pager) {
+        this.pager = pager;
     }
 
     @JsonIgnore

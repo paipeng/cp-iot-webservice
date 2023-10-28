@@ -71,6 +71,7 @@ public class MqttService extends BaseService {
     }
 
     public void sendPagerMessage(CPIOTPagerMessage cpiotPagerMessage) {
+        logger.info("sendPagerMessage");
         // 验证 有效性
         ContactScanCode contactScanCode = contactScanCodeRepository.findByUuid(cpiotPagerMessage.getUuid()).orElse(null);
         if (contactScanCode != null) {
@@ -81,16 +82,18 @@ public class MqttService extends BaseService {
 
             if (contactScanCode.getReceiveUser().getDevices() != null && contactScanCode.getReceiveUser().getDevices().size() > 0) {
                 for (Device device : contactScanCode.getReceiveUser().getDevices()) {
-                    try {
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        String topic = "CP_IOT/" + device.getUdid() + "/PAGER_MESSAGE";
-                        String data = objectMapper.writeValueAsString(cpiotPagerMessage);
-                        logger.info("send pager message ping");
-                        logger.info("sendToMqtt topic: " + topic);
-                        logger.info("sendToMqtt data: " + data);
-                        mqttGateway.sendToMqtt(data, topic);
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
+                    if (device.isPager()) {
+                        try {
+                            ObjectMapper objectMapper = new ObjectMapper();
+                            String topic = "CP_IOT/" + device.getUdid() + "/PAGER_MESSAGE";
+                            String data = objectMapper.writeValueAsString(cpiotPagerMessage);
+                            logger.info("send pager message ping");
+                            logger.info("sendToMqtt topic: " + topic);
+                            logger.info("sendToMqtt data: " + data);
+                            mqttGateway.sendToMqtt(data, topic);
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             }
