@@ -45,6 +45,13 @@ public class User extends BaseEntity implements UserDetails {
     @LazyCollection(value = LazyCollectionOption.EXTRA)
     private List<Device> devices;
 
+
+
+    @JsonIgnore
+    @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "sendUser")
+    @LazyCollection(value = LazyCollectionOption.EXTRA)
+    private List<ContactScanCode> contactScanCodes;
+
     public String getEmail() {
         return email;
     }
@@ -136,5 +143,13 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public List<ContactScanCode> getContactScanCodes() {
+        return contactScanCodes;
+    }
+
+    public void setContactScanCodes(List<ContactScanCode> contactScanCodes) {
+        this.contactScanCodes = contactScanCodes;
     }
 }

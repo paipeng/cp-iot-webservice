@@ -1,8 +1,17 @@
 package com.paipeng.iot.mqtt.model;
 
 public class CPIOTPagerMessage extends CPIOMessageBoard {
+    private String sender;
     private String uuid;
     private String receiver;
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
 
     public String getUuid() {
         return uuid;

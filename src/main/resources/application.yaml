@@ -55,9 +55,11 @@ mqtt:
     - topicA
     - share/group1/hello
     - share/group1/hello1
-    - CP_IOT_PONG
-    - CP_IOT_LED_UPDATE
-    - CP_IOT_TEMERAPTURE_UPDATE
+    - CP_IOT/PONG
+    - CP_IOT/LED/UPDATE
+    - CP_IOT/TEMPERATURE/UPDATE
+    - CP_IOT/PAGER_MESSAGE/ARRIVED
+    - CP_IOT/PAGER_MESSAGE/READ
   cleanSession: true
   reconnect: true
   timeout: 100

@@ -50,7 +50,7 @@ public class MqttController {
 
     }
 
-    @PostMapping(value = "/bp", produces = {"application/json;charset=UTF-8"})
+    @PostMapping(value = "/pager", produces = {"application/json;charset=UTF-8"})
     public void sendPagerMessage(@NotNull @RequestBody CPIOTPagerMessage cpiotPagerMessage, HttpServletResponse httpServletResponse) {
         mqttService.sendPagerMessage(cpiotPagerMessage);
 
