@@ -6,14 +6,62 @@ spring:
     hibernate.ddl-auto: update
     properties:
       hibernate:
-        format_sql:true
+        format_sql: true
+        #dialect: org.hibernate.dialect.mysql5dialect
+#        hbm2ddl:
+#          auto: none
+#        temp:
+#          use_jdbc_metadata_defaults: false
+#    show-sql: true
+
+#    hibernate:
+#      ddl-auto: none
   datasource:
-    url: jdbc:mysql://localhost:3306/iot_db
+    url: jdbc:mysql://192.168.1.228:3306/cpiot_db
     username: iot
-    password: Bf1R7qGihfAN
+    password: Bf1R7qGihfAN#
+#    continueonerror: true
+#    initialize: false
+#    initialsize: 0
+#    timebetweenevictionrunsmillis: 5000
+#    minevictableidletimemillis: 5000
+#    minidle: 0
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: true
 security:
   jwt:
     secret: 5161127a80ff47a1855176c345a1de39833b486ea3dd40629081ab0370a1632c87496492fb634c60a458182c69a7f0d0
+
+
+#### MQTT??
+## username: EMQX??????
+## password: EMQX?????
+## host-url: MQTT-??????????????????????tcp://127.0.0.1:61613?tcp://192.168.2.133:61613
+## client-id: MQTT-??????????ID
+## default-topic: MQTT-?????????????????????
+## connection-timeout: ??????
+## subscription-topic: ??????????????????? https://www.emqx.io/docs/zh/v5.0/mqtt/mqtt-shared-subscription.html#%E5%B8%A6%E7%BE%A4%E7%BB%84%E7%9A%84%E5%85%B1%E4%BA%AB%E8%AE%A2%E9%98%85
+
+mqtt:
+  username: admin
+  password: public
+  host-url:
+    - tcp://192.168.1.228:1883
+  client-id: cp-iot-dev
+  default-topic: topicA
+  connection-timeout: 1000
+  subscription-topic:
+    - topicA
+    - share/group1/hello
+    - share/group1/hello1
+    - CP_IOT/PONG
+    - CP_IOT/LED/UPDATE
+    - CP_IOT/TEMPERATURE/UPDATE
+    - CP_IOT/PAGER_MESSAGE/ARRIVED
+    - CP_IOT/PAGER_MESSAGE/READ
+  cleanSession: true
+  reconnect: true
+  timeout: 100
+  keepAlive: 100
+  qos: 2

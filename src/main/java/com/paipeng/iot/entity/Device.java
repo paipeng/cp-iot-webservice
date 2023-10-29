@@ -2,6 +2,8 @@ package com.paipeng.iot.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -11,8 +13,8 @@ import java.util.List;
 @Entity
 @Table(name = "device")
 public class Device extends BaseEntity {
-    @Column(name = "uuid", nullable = false, length = 36, unique = true)
-    private String uuid;
+    @Column(name = "udid", nullable = false, length = 36, unique = true)
+    private String udid;
     @Column(nullable = false, length = 64, unique = true)
     private String name;
 
@@ -45,12 +47,21 @@ public class Device extends BaseEntity {
     @Column(name = "longitude", precision = 11, scale = 8)
     private BigDecimal longitude;
 
+    @Column(name = "online", columnDefinition = "bit default 0 ", nullable = false)
+    private boolean online;
 
 
+    @Column(name = "pager", columnDefinition = "bit default 0 ", nullable = false)
+    private boolean pager;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "device_user", joinColumns = @JoinColumn(name = "device_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users;
+
+    @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "device")
+    @LazyCollection(value = LazyCollectionOption.EXTRA)
+    private List<Record> records;
+
 
 
     public String getName() {
@@ -101,12 +112,12 @@ public class Device extends BaseEntity {
         this.photosensitive = photosensitive;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getUdid() {
+        return udid;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setUdid(String udid) {
+        this.udid = udid;
     }
 
     public boolean isTemperature() {
@@ -161,11 +172,36 @@ public class Device extends BaseEntity {
         this.longitude = longitude;
     }
 
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+
+    public boolean isPager() {
+        return pager;
+    }
+
+    public void setPager(boolean pager) {
+        this.pager = pager;
+    }
+
+    @JsonIgnore
+    public List<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(List<Record> records) {
+        this.records = records;
+    }
+
     @JsonIgnore
     public List<String> getFeatureStrings() {
         List<String> featureStrings = new ArrayList<>();
         featureStrings.add("owner:STRING=" + getName());
-        featureStrings.add("uuid:STRING=" + getUuid());
+        featureStrings.add("udid:STRING=" + getUdid());
         featureStrings.add("expire:DATE=" + getExpire());
         featureStrings.add("nanogrid:INT=" + (isLed()?"1":"0"));
         return featureStrings;

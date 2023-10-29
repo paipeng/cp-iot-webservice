@@ -63,7 +63,9 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/version").permitAll()
                                 .requestMatchers("/tests/**").permitAll()
+                                .requestMatchers("/mqtts/**").permitAll()
                                 .requestMatchers("/login/**").permitAll()
+                                .requestMatchers("/websocket/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 

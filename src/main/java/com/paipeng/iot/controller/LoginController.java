@@ -21,7 +21,7 @@ public class LoginController {
         return loginService.register(user);
     }
 
-    @PostMapping(value = "/test", produces = {"application/json;charset=UTF-8"})
+    @PostMapping(value = "", produces = {"application/json;charset=UTF-8"})
     public User login(@RequestBody User user, HttpServletResponse httpServletResponse) throws Exception {
         return loginService.login(user);
     }
