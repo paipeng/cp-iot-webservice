@@ -17,9 +17,9 @@ spring:
 #    hibernate:
 #      ddl-auto: none
   datasource:
-    url: jdbc:mysql://localhost:3306/iot_db
+    url: jdbc:mysql://192.168.1.228:3306/cpiot_db
     username: iot
-    password: Bf1R7qGihfAN
+    password: Bf1R7qGihfAN#
 #    continueonerror: true
 #    initialize: false
 #    initialsize: 0
