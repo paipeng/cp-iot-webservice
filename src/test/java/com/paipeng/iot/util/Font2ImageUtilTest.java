@@ -21,6 +21,10 @@ public class Font2ImageUtilTest {
         byte[] data = Font2ImageUtil.text2Pixel(text, 26);
         Assertions.assertNotNull(data);
         System.out.println("byte data size: " + data.length);
+
+        //data = Font2ImageUtil.decompress(data);
+
+        System.out.println("byte data size: " + data.length);
         System.out.println("font count: " + data.length/(72));
 
 

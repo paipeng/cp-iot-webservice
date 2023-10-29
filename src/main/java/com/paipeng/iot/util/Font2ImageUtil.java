@@ -6,10 +6,12 @@ import org.apache.commons.lang3.ArrayUtils;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterOutputStream;
 
 public class Font2ImageUtil {
     private static final String fontName = "fonts/Alibaba-PuHuiTi-Regular.ttf";
@@ -72,6 +74,7 @@ public class Font2ImageUtil {
         g2d.dispose();
         return s;
     }
+
     public static byte[] text2Pixel(String text, float fontSize) throws IOException, FontFormatException {
         // load font
         InputStream is = Font2ImageUtil.class.getClassLoader().getResourceAsStream(fontName);
@@ -81,13 +84,13 @@ public class Font2ImageUtil {
         Size fontPixelSize = getTextImageSize(fontSize);
         byte[] totalBytes = null;
         for (int i = 0; i < text.length(); i++) {
-            BufferedImage bufferedImage =  text2Image(text.substring(i, i+1), font, fontPixelSize);
+            BufferedImage bufferedImage = text2Image(text.substring(i, i + 1), font, fontPixelSize);
             try {
                 // crop border
-                Rectangle rectangle = new Rectangle(1, (fontPixelSize.height - fontPixelSize.width)/2 + 1, fontPixelSize.width - 2, fontPixelSize.width - 2);
+                Rectangle rectangle = new Rectangle(1, (fontPixelSize.height - fontPixelSize.width) / 2 + 1, fontPixelSize.width - 2, fontPixelSize.width - 2);
                 bufferedImage = ImageUtil.crop(bufferedImage, rectangle);
 
-                ImageIO.write(bufferedImage, "bmp", new File("Text_" + i +".bmp"));
+                ImageIO.write(bufferedImage, "bmp", new File("Text_" + i + ".bmp"));
 
 
                 if (totalBytes == null) {
@@ -124,6 +127,37 @@ public class Font2ImageUtil {
         g2d.dispose();
 
         return img;
+    }
+    public static byte[] compress(byte[] in) {
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            DeflaterOutputStream defl = new DeflaterOutputStream(out);
+            defl.write(in);
+            defl.flush();
+            defl.close();
+
+            return out.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(150);
+            return null;
+        }
+    }
+
+    public static byte[] decompress(byte[] in) {
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            InflaterOutputStream infl = new InflaterOutputStream(out);
+            infl.write(in);
+            infl.flush();
+            infl.close();
+
+            return out.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(150);
+            return null;
+        }
     }
 
 }
