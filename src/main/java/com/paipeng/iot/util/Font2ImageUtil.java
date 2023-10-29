@@ -1,12 +1,15 @@
 package com.paipeng.iot.util;
 
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 public class Font2ImageUtil {
     private static final String fontName = "fonts/Alibaba-PuHuiTi-Regular.ttf";
@@ -76,8 +79,8 @@ public class Font2ImageUtil {
 
         // calculate size
         Size fontPixelSize = getTextImageSize(fontSize);
-
-        for (int i = 0; i < text.length()-1; i++) {
+        byte[] totalBytes = null;
+        for (int i = 0; i < text.length(); i++) {
             BufferedImage bufferedImage =  text2Image(text.substring(i, i+1), font, fontPixelSize);
             try {
                 // crop border
@@ -85,12 +88,21 @@ public class Font2ImageUtil {
                 bufferedImage = ImageUtil.crop(bufferedImage, rectangle);
 
                 ImageIO.write(bufferedImage, "bmp", new File("Text_" + i +".bmp"));
+
+
+                if (totalBytes == null) {
+                    totalBytes = ImageUtil.convert1BitByteArray(bufferedImage);
+                } else {
+                    byte[] data = ImageUtil.convert1BitByteArray(bufferedImage);
+                    totalBytes = ArrayUtils.addAll(totalBytes, data);
+                }
+
             } catch (IOException ex) {
                 ex.printStackTrace();
                 return null;
             }
         }
-        return null;
+        return totalBytes;
     }
 
     public static BufferedImage text2Image(String text, Font font, Size size) throws IOException, FontFormatException {
@@ -113,4 +125,5 @@ public class Font2ImageUtil {
 
         return img;
     }
+
 }

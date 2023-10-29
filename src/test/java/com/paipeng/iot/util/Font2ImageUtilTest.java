@@ -16,8 +16,14 @@ public class Font2ImageUtilTest {
 
     @Test
     void text2Pixel() throws IOException, FontFormatException {
-        String text = "你好鹏龘";
+        String text = "你好-鹏龘,";
+        text = "你";
         byte[] data = Font2ImageUtil.text2Pixel(text, 26);
         Assertions.assertNotNull(data);
+        System.out.println("byte data size: " + data.length);
+        System.out.println("font count: " + data.length/(72));
+
+
+        ImageUtil.print1Bit(data);
     }
 }
