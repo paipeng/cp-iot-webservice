@@ -11,10 +11,15 @@ import com.paipeng.iot.mqtt.model.CPIOTPing;
 import com.paipeng.iot.repository.ContactScanCodeRepository;
 import com.paipeng.iot.repository.DeviceRepository;
 import com.paipeng.iot.repository.UserRepository;
+import com.paipeng.iot.util.Font2ImageUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.awt.*;
+import java.io.IOException;
+import java.util.Base64;
 
 @Service
 public class MqttService extends BaseService {
@@ -80,23 +85,36 @@ public class MqttService extends BaseService {
             cpiotPagerMessage.setSender(contactScanCode.getSendUser().getUsername());
             cpiotPagerMessage.setReceiver(contactScanCode.getReceiveUser().getUsername());
 
-            if (contactScanCode.getReceiveUser().getDevices() != null && contactScanCode.getReceiveUser().getDevices().size() > 0) {
-                for (Device device : contactScanCode.getReceiveUser().getDevices()) {
-                    if (device.isPager()) {
-                        try {
-                            ObjectMapper objectMapper = new ObjectMapper();
-                            String topic = "CP_IOT/" + device.getUdid() + "/PAGER_MESSAGE";
-                            String data = objectMapper.writeValueAsString(cpiotPagerMessage);
-                            logger.info("send pager message ping");
-                            logger.info("sendToMqtt topic: " + topic);
-                            logger.info("sendToMqtt data: " + data);
-                            mqttGateway.sendToMqtt(data, topic);
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
+            // convert text to 1bit pixel
+            try {
+                byte[] data = Font2ImageUtil.text2Pixel(cpiotPagerMessage.getMessage(), 26);
+
+                cpiotPagerMessage.setTextPixelBase64(Base64.getEncoder().encodeToString(data));
+                cpiotPagerMessage.setTextCount(cpiotPagerMessage.getMessage().length());
+
+                if (contactScanCode.getReceiveUser().getDevices() != null && contactScanCode.getReceiveUser().getDevices().size() > 0) {
+                    for (Device device : contactScanCode.getReceiveUser().getDevices()) {
+                        if (device.isPager()) {
+                            try {
+                                ObjectMapper objectMapper = new ObjectMapper();
+                                String topic = "CP_IOT/" + device.getUdid() + "/PAGER_MESSAGE";
+                                String jsonData = objectMapper.writeValueAsString(cpiotPagerMessage);
+                                logger.info("send pager message ping");
+                                logger.info("sendToMqtt topic: " + topic);
+                                logger.info("sendToMqtt data: " + jsonData);
+                                mqttGateway.sendToMqtt(jsonData, topic);
+                            } catch (JsonProcessingException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     }
                 }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (FontFormatException e) {
+                throw new RuntimeException(e);
             }
+
         }
     }
 
