@@ -26,3 +26,6 @@ gradlew
 gradlew.bat
 gradle
 version.properties
+.gradle
+.idea
+build
