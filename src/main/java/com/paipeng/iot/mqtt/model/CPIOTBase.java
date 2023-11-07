@@ -1,6 +1,6 @@
 package com.paipeng.iot.mqtt.model;
 
-public abstract class CPIOTBase {
+public class CPIOTBase {
     protected String udid;
     protected String serverName;
 

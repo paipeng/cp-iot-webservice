@@ -4,12 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paipeng.iot.entity.ContactScanCode;
 import com.paipeng.iot.entity.Device;
+import com.paipeng.iot.entity.Radio;
 import com.paipeng.iot.entity.User;
 import com.paipeng.iot.mqtt.gateway.MqttGateway;
+import com.paipeng.iot.mqtt.model.CPIOTBase;
 import com.paipeng.iot.mqtt.model.CPIOTPagerMessage;
 import com.paipeng.iot.mqtt.model.CPIOTPing;
+import com.paipeng.iot.mqtt.model.CPIOTRadio;
 import com.paipeng.iot.repository.ContactScanCodeRepository;
 import com.paipeng.iot.repository.DeviceRepository;
+import com.paipeng.iot.repository.RadioRepository;
 import com.paipeng.iot.repository.UserRepository;
 import com.paipeng.iot.util.Font2ImageUtil;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 public class MqttService extends BaseService {
@@ -36,6 +41,9 @@ public class MqttService extends BaseService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RadioRepository radioRepository;
 
     public void sendMsg(String data) {
         mqttGateway.sendToMqtt(data);
@@ -86,35 +94,28 @@ public class MqttService extends BaseService {
             cpiotPagerMessage.setReceiver(contactScanCode.getReceiveUser().getUsername());
 
             // convert text to 1bit pixel
-            try {
-                byte[] data = Font2ImageUtil.text2Pixel(cpiotPagerMessage.getMessage(), 26);
+            //byte[] data = Font2ImageUtil.text2Pixel(cpiotPagerMessage.getMessage(), 26);
 
-                cpiotPagerMessage.setTextPixelBase64(Base64.getEncoder().encodeToString(data));
-                cpiotPagerMessage.setTextCount(cpiotPagerMessage.getMessage().length());
+            //cpiotPagerMessage.setTextPixelBase64(Base64.getEncoder().encodeToString(data));
+            cpiotPagerMessage.setTextCount(cpiotPagerMessage.getMessage().length());
 
-                if (contactScanCode.getReceiveUser().getDevices() != null && contactScanCode.getReceiveUser().getDevices().size() > 0) {
-                    for (Device device : contactScanCode.getReceiveUser().getDevices()) {
-                        if (device.isPager()) {
-                            try {
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String topic = "CP_IOT/" + device.getUdid() + "/PAGER_MESSAGE";
-                                String jsonData = objectMapper.writeValueAsString(cpiotPagerMessage);
-                                logger.info("send pager message ping");
-                                logger.info("sendToMqtt topic: " + topic);
-                                logger.info("sendToMqtt data: " + jsonData);
-                                mqttGateway.sendToMqtt(jsonData, topic);
-                            } catch (JsonProcessingException e) {
-                                throw new RuntimeException(e);
-                            }
+            if (contactScanCode.getReceiveUser().getDevices() != null && contactScanCode.getReceiveUser().getDevices().size() > 0) {
+                for (Device device : contactScanCode.getReceiveUser().getDevices()) {
+                    if (device.isPager()) {
+                        try {
+                            ObjectMapper objectMapper = new ObjectMapper();
+                            String topic = "CP_IOT/" + device.getUdid() + "/PAGER_MESSAGE";
+                            String jsonData = objectMapper.writeValueAsString(cpiotPagerMessage);
+                            logger.info("send pager message ping");
+                            logger.info("sendToMqtt topic: " + topic);
+                            logger.info("sendToMqtt data: " + jsonData);
+                            mqttGateway.sendToMqtt(jsonData, topic);
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (FontFormatException e) {
-                throw new RuntimeException(e);
             }
-
         }
     }
 
@@ -134,5 +135,66 @@ public class MqttService extends BaseService {
 
     private boolean checkContactScanCodeValidation(ContactScanCode contactScanCode) {
         return (contactScanCode.isValid());
+    }
+
+    public void getRadios(CPIOTBase device) {
+        logger.info("getValidRadios: " + device.getUdid());
+        List<Radio> radios = radioRepository.findRadiosByValid();
+
+        CPIOTRadio cpiotRadio = new CPIOTRadio();
+        cpiotRadio.setRadios(radios);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String topic = "CP_IOT/" + device.getUdid() + "/RADIO";
+            String jsonData = objectMapper.writeValueAsString(cpiotRadio);
+            logger.info("send radio list to device");
+            logger.info("sendToMqtt topic: " + topic);
+            logger.info("sendToMqtt data: " + jsonData);
+            mqttGateway.sendToMqtt(jsonData, topic);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void radioPlay(String udid) {
+        Device device = deviceRepository.findByUdid(udid).orElse(null);
+        if (device != null) {
+            CPIOTRadio cpiotRadio = new CPIOTRadio();
+            List<Radio> radios = radioRepository.findRadiosByValid();
+            if (radios != null && !radios.isEmpty()) {
+                cpiotRadio.setRadios(radios);
+            }
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String topic = "CP_IOT/" + device.getUdid() + "/RADIO/PLAY";
+                String jsonData = objectMapper.writeValueAsString(cpiotRadio);
+                logger.info("send radio list to device");
+                logger.info("sendToMqtt topic: " + topic);
+                logger.info("sendToMqtt data: " + jsonData);
+                mqttGateway.sendToMqtt(jsonData, topic);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void radioStop(String udid) {
+        Device device = deviceRepository.findByUdid(udid).orElse(null);
+        if (device != null) {
+            CPIOTRadio cpiotRadio = new CPIOTRadio();
+
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String topic = "CP_IOT/" + device.getUdid() + "/RADIO/STOP";
+                String jsonData = objectMapper.writeValueAsString(cpiotRadio);
+                logger.info("send radio list to device");
+                logger.info("sendToMqtt topic: " + topic);
+                logger.info("sendToMqtt data: " + jsonData);
+                mqttGateway.sendToMqtt(jsonData, topic);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

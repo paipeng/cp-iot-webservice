@@ -38,6 +38,10 @@ public class Device extends BaseEntity {
 
     @Column(name = "voice_control", columnDefinition = "bit default 0 ", nullable = false)
     private boolean voiceControl;
+
+    @Column(name = "radio", columnDefinition = "bit default 0 ", nullable = false)
+    private boolean radio;
+
     @Column(name = "location", nullable = true, length = 128)
     private String location;
 
@@ -195,6 +199,14 @@ public class Device extends BaseEntity {
 
     public void setRecords(List<Record> records) {
         this.records = records;
+    }
+
+    public boolean isRadio() {
+        return radio;
+    }
+
+    public void setRadio(boolean radio) {
+        this.radio = radio;
     }
 
     @JsonIgnore

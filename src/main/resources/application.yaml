@@ -60,6 +60,7 @@ mqtt:
     - CP_IOT/TEMPERATURE/UPDATE
     - CP_IOT/PAGER_MESSAGE/ARRIVED
     - CP_IOT/PAGER_MESSAGE/READ
+    - CP_IOT/RADIO
   cleanSession: true
   reconnect: true
   timeout: 100

@@ -2,9 +2,12 @@ package com.paipeng.iot.mqtt.handle;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.paipeng.iot.mqtt.model.CPIOTBase;
 import com.paipeng.iot.mqtt.model.CPIOTPing;
 import com.paipeng.iot.mqtt.model.CPIOTTemperature;
+import com.paipeng.iot.service.MqttService;
 import com.paipeng.iot.service.RecordService;
+import com.paipeng.iot.service.RadioService;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +23,9 @@ public class ReceiveMessageHandler implements MessageHandler {
 
     @Autowired
     private RecordService recordService;
+
+    @Autowired
+    private MqttService mqttService;
 
     @Override
     public void handleMessage(Message<?> message) throws MessagingException {
@@ -41,6 +47,12 @@ public class ReceiveMessageHandler implements MessageHandler {
                 CPIOTTemperature cpiotTemperature = objectMapper.readValue(message.getPayload().toString(), CPIOTTemperature.class);
                 if (cpiotTemperature != null) {
                     recordService.updateTemperature(cpiotTemperature);
+                }
+            } else if (topic.equals("CP_IOT/RADIO")) {
+                logger.info("CP_IOT/RADIO");
+                CPIOTBase cpiotBase = objectMapper.readValue(message.getPayload().toString(), CPIOTBase.class);
+                if (cpiotBase != null) {
+                    mqttService.getRadios(cpiotBase);
                 }
             }
         } catch (Exception e) {

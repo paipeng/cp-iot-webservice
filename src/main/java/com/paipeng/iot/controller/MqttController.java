@@ -61,4 +61,15 @@ public class MqttController {
         mqttService.sendPagerMessage(cpiotPagerMessage);
 
     }
+
+    @GetMapping(value = "/radio/{udid}/play", produces = {"application/json;charset=UTF-8"})
+    public void radioPlay(@NotNull @PathVariable("udid") String udid) {
+        mqttService.radioPlay(udid);
+    }
+
+    @GetMapping(value = "/radio/{udid}/stop", produces = {"application/json;charset=UTF-8"})
+    public void radioStop(@NotNull @PathVariable("udid") String udid) {
+        mqttService.radioStop(udid);
+    }
+
 }
