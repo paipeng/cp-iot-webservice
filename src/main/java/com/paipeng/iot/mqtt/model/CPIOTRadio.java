@@ -9,6 +9,8 @@ public class CPIOTRadio extends CPIOTBase{
 
     private int event;
 
+    private long playRadioId;
+
 
     public List<Radio> getRadios() {
         return radios;
@@ -24,5 +26,13 @@ public class CPIOTRadio extends CPIOTBase{
 
     public void setEvent(int event) {
         this.event = event;
+    }
+
+    public long getPlayRadioId() {
+        return playRadioId;
+    }
+
+    public void setPlayRadioId(long playRadioId) {
+        this.playRadioId = playRadioId;
     }
 }

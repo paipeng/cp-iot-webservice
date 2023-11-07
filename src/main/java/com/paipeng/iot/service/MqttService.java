@@ -157,13 +157,15 @@ public class MqttService extends BaseService {
         }
     }
 
-    public void radioPlay(String udid) {
+    public void radioPlay(String udid, Long id) {
         Device device = deviceRepository.findByUdid(udid).orElse(null);
         if (device != null) {
             CPIOTRadio cpiotRadio = new CPIOTRadio();
+            cpiotRadio.setEvent(1);
             List<Radio> radios = radioRepository.findRadiosByValid();
             if (radios != null && !radios.isEmpty()) {
                 cpiotRadio.setRadios(radios);
+                cpiotRadio.setPlayRadioId(id);
             }
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
