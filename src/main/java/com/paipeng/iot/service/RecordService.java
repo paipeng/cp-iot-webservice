@@ -68,6 +68,15 @@ public class RecordService extends BaseService {
             record.setValue(cpiotTemperature.getValue());
             recordRepository.saveAndFlush(record);
 
+            if (cpiotTemperature.getHumidity() > 0) {
+                logger.info("insert humidity: " + cpiotTemperature);
+                record = new Record();
+                record.setDevice(device);
+                record.setState(cpiotTemperature.getState());
+                record.setRecordType(RecordType.HUMIDITY);
+                record.setValue(cpiotTemperature.getHumidity());
+                recordRepository.saveAndFlush(record);
+            }
             // UPDATE send to web via websocket
             liveMonitorSocketService.sendData(record);
         } else {

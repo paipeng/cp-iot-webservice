@@ -12,6 +12,7 @@ public enum RecordType {
     VOICE,
     DEVICE_STATE,
     PING,
-    LED
+    LED,
+    HUMIDITY
 
 }
