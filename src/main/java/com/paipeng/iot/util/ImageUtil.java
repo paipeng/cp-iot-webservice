@@ -138,4 +138,41 @@ public class ImageUtil {
         }
         System.out.println(" ");
     }
+
+
+    public static void printParolaMatrix(byte[][] data, int font_size) {
+        System.out.println(HexFormat.of().formatHex(data[0]));
+        System.out.println(HexFormat.of().formatHex(data[1]));
+
+        int column = (data[0][0] > data[1][0]) ? data[0][0]: data[1][0];
+        System.out.println("column: " + column);
+
+        int[][] pixels = new int[font_size][column];
+        // data[0]:  upper 8x16
+        // data[1]:  lower 8x16
+
+        for (int i = 1; i <= column; i++) {
+            // upper
+            if (i < data[0].length) {
+                for (int j = 0; j < font_size/2; j++) {
+                    //System.out.println("i: " + i + " j: " + j);
+                    pixels[j][i-1] = ((data[0][i] >> j) & 0x1);
+                }
+            }
+            // lower
+            if (i < data[1].length) {
+                for (int j = 0; j < font_size/2; j++) {
+                    pixels[j + font_size/2][i-1] = (((data[1][i] & 0xFF - 0) >> j) & 0x1);
+                }
+            }
+        }
+
+        for (int i = 0; i < font_size; i++) {
+            for (int j = 0; j < column; j++) {
+                System.out.print(pixels[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println(" ");
+    }
 }

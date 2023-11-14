@@ -124,6 +124,37 @@ public class Font2ImageUtil {
         return totalBytes;
     }
 
+
+
+    public static byte[][] text2Parola(String text, float fontSize) throws IOException, FontFormatException {
+        // load font
+        InputStream is = Font2ImageUtil.class.getClassLoader().getResourceAsStream(fontName);
+        assert is != null;
+        Font font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(fontSize);
+
+        // calculate size
+        Size fontPixelSize = getTextImageSize(fontSize);
+        byte[][] totalBytes = new byte[2][0];
+        for (int i = 0; i < text.length(); i++) {
+            BufferedImage bufferedImage = text2Image(text.substring(i, i + 1), font, fontPixelSize);
+            try {
+                // crop border
+                Rectangle rectangle = new Rectangle(1, (fontPixelSize.height - fontPixelSize.width) / 2 + 1, fontPixelSize.width - 2, fontPixelSize.width - 2);
+                bufferedImage = ImageUtil.crop(bufferedImage, rectangle);
+
+                assert bufferedImage != null;
+                ImageIO.write(bufferedImage, "bmp", new File("Text_" + i + ".bmp"));
+                byte[][] data = ImageUtil.convertParolaDataFormat(bufferedImage);
+                totalBytes[0] = ArrayUtils.addAll(totalBytes[0], data[0]);
+                totalBytes[1] = ArrayUtils.addAll(totalBytes[1], data[1]);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                return null;
+            }
+        }
+        return totalBytes;
+    }
+
     public static BufferedImage text2Image(String text, Font font, Size size) throws IOException, FontFormatException {
         BufferedImage img = new BufferedImage(size.width, size.height, BufferedImage.TYPE_BYTE_BINARY);
         Graphics2D g2d = img.createGraphics();
