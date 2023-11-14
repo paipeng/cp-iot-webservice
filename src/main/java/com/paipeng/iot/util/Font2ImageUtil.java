@@ -15,15 +15,16 @@ import java.util.zip.InflaterOutputStream;
 
 public class Font2ImageUtil {
     private static final String fontName = "fonts/Alibaba-PuHuiTi-Regular.ttf";
+    private static final String heiTiFontName = "fonts/FangZhengHeiTiJianTi.ttf";
 
     public static byte[] text2Image(String text) throws IOException, FontFormatException {
         BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = img.createGraphics();
-        Font font = new Font("Arial", Font.PLAIN, 48);
+        //Font font = new Font("Arial", Font.PLAIN, 48);
 
         //String fontPath = Font2ImageUtil.class.getClassLoader().getResource(fontName).getPath();
         InputStream is = Font2ImageUtil.class.getClassLoader().getResourceAsStream(fontName);
-        font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(24f);
+        Font font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(24f);
 
         g2d.setFont(font);
         FontMetrics fm = g2d.getFontMetrics();
@@ -75,9 +76,10 @@ public class Font2ImageUtil {
         return s;
     }
 
-    public static byte[] text2Pixel(String text, float fontSize) throws IOException, FontFormatException {
+    public static byte[] text2Pixel(String text, float fontSize, int font_format) throws IOException, FontFormatException {
         // load font
         InputStream is = Font2ImageUtil.class.getClassLoader().getResourceAsStream(fontName);
+        assert is != null;
         Font font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(fontSize);
 
         // calculate size
@@ -90,14 +92,28 @@ public class Font2ImageUtil {
                 Rectangle rectangle = new Rectangle(1, (fontPixelSize.height - fontPixelSize.width) / 2 + 1, fontPixelSize.width - 2, fontPixelSize.width - 2);
                 bufferedImage = ImageUtil.crop(bufferedImage, rectangle);
 
+                assert bufferedImage != null;
                 ImageIO.write(bufferedImage, "bmp", new File("Text_" + i + ".bmp"));
 
 
-                if (totalBytes == null) {
-                    totalBytes = ImageUtil.convert1BitByteArray(bufferedImage);
+                if (font_format == 0) {
+                    if (totalBytes == null) {
+                        totalBytes = ImageUtil.convert1BitByteArray(bufferedImage);
+                    } else {
+                        byte[] data = ImageUtil.convert1BitByteArray(bufferedImage);
+                        totalBytes = ArrayUtils.addAll(totalBytes, data);
+                    }
                 } else {
-                    byte[] data = ImageUtil.convert1BitByteArray(bufferedImage);
-                    totalBytes = ArrayUtils.addAll(totalBytes, data);
+                    if (totalBytes == null) {
+                        byte[][] data = ImageUtil.convertParolaDataFormat(bufferedImage);
+                        totalBytes =data[0];
+                        totalBytes = ArrayUtils.addAll(totalBytes, data[1]);
+                    } else {
+                        byte[][] data = ImageUtil.convertParolaDataFormat(bufferedImage);
+                        totalBytes = ArrayUtils.addAll(totalBytes, data[0]);
+                        totalBytes = ArrayUtils.addAll(totalBytes, data[1]);
+                    }
+
                 }
 
             } catch (IOException ex) {
