@@ -76,7 +76,7 @@ public class Font2ImageUtil {
         return s;
     }
 
-    public static byte[] text2Pixel(String text, float fontSize, int font_format) throws IOException, FontFormatException {
+    public static byte[] text2Pixel(String text, float fontSize) throws IOException, FontFormatException {
         // load font
         InputStream is = Font2ImageUtil.class.getClassLoader().getResourceAsStream(fontName);
         assert is != null;
@@ -95,27 +95,12 @@ public class Font2ImageUtil {
                 assert bufferedImage != null;
                 ImageIO.write(bufferedImage, "bmp", new File("Text_" + i + ".bmp"));
 
-
-                if (font_format == 0) {
-                    if (totalBytes == null) {
-                        totalBytes = ImageUtil.convert1BitByteArray(bufferedImage);
-                    } else {
-                        byte[] data = ImageUtil.convert1BitByteArray(bufferedImage);
-                        totalBytes = ArrayUtils.addAll(totalBytes, data);
-                    }
+                if (totalBytes == null) {
+                    totalBytes = ImageUtil.convert1BitByteArray(bufferedImage);
                 } else {
-                    if (totalBytes == null) {
-                        byte[][] data = ImageUtil.convertParolaDataFormat(bufferedImage);
-                        totalBytes =data[0];
-                        totalBytes = ArrayUtils.addAll(totalBytes, data[1]);
-                    } else {
-                        byte[][] data = ImageUtil.convertParolaDataFormat(bufferedImage);
-                        totalBytes = ArrayUtils.addAll(totalBytes, data[0]);
-                        totalBytes = ArrayUtils.addAll(totalBytes, data[1]);
-                    }
-
+                    byte[] data = ImageUtil.convert1BitByteArray(bufferedImage);
+                    totalBytes = ArrayUtils.addAll(totalBytes, data);
                 }
-
             } catch (IOException ex) {
                 ex.printStackTrace();
                 return null;
@@ -144,7 +129,12 @@ public class Font2ImageUtil {
 
                 assert bufferedImage != null;
                 ImageIO.write(bufferedImage, "bmp", new File("Text_" + i + ".bmp"));
-                byte[][] data = ImageUtil.convertParolaDataFormat(bufferedImage);
+                /*
+                if (bufferedImage.getHeight() < 16) {
+                    bufferedImage = ImageUtil.padding(bufferedImage, 2);
+                }
+                 */
+                byte[][] data = ImageUtil.convertParolaDataFormat(bufferedImage, 16);
                 totalBytes[0] = ArrayUtils.addAll(totalBytes[0], data[0]);
                 totalBytes[1] = ArrayUtils.addAll(totalBytes[1], data[1]);
             } catch (IOException ex) {
