@@ -5,9 +5,7 @@ public class CPIOTPagerMessage extends CPIOMessageBoard {
     private String uuid;
     private String receiver;
 
-    private String textPixelBase64;
 
-    private int textCount;
 
     public String getSender() {
         return sender;
@@ -31,21 +29,5 @@ public class CPIOTPagerMessage extends CPIOMessageBoard {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
-    }
-
-    public String getTextPixelBase64() {
-        return textPixelBase64;
-    }
-
-    public void setTextPixelBase64(String textPixelBase64) {
-        this.textPixelBase64 = textPixelBase64;
-    }
-
-    public int getTextCount() {
-        return textCount;
-    }
-
-    public void setTextCount(int textCount) {
-        this.textCount = textCount;
     }
 }
