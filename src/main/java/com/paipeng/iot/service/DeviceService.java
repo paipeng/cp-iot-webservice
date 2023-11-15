@@ -13,6 +13,7 @@ import com.paipeng.iot.repository.DeviceRepository;
 import com.paipeng.iot.repository.RecordRepository;
 import com.paipeng.iot.repository.UserRepository;
 import com.paipeng.iot.util.Font2ImageUtil;
+import com.paipeng.iot.util.ImageUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,8 +112,10 @@ public class DeviceService extends BaseService {
         byte[][] data = Font2ImageUtil.text2Parola(messageBoard.getMessage(), 18);
 
         assert data != null;
+        ImageUtil.printParolaMatrix(data, 16);
         messageBoard.setTextPixelBase64(Base64.getEncoder().encodeToString(data[0]));
         messageBoard.setTextPixel2Base64(Base64.getEncoder().encodeToString(data[1]));
+
 
         recordRepository.saveAndFlush(record);
 
