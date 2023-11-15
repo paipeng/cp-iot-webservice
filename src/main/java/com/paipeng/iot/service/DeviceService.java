@@ -12,6 +12,7 @@ import com.paipeng.iot.mqtt.model.CPIOTLed;
 import com.paipeng.iot.repository.DeviceRepository;
 import com.paipeng.iot.repository.RecordRepository;
 import com.paipeng.iot.repository.UserRepository;
+import com.paipeng.iot.util.Font2ImageUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -94,13 +98,22 @@ public class DeviceService extends BaseService {
         return device;
     }
 
-    public Device updateMessageBoard(Long id, CPIOMessageBoard messageBoard) {
+    public Device updateMessageBoard(Long id, CPIOMessageBoard messageBoard) throws IOException, FontFormatException {
         logger.info("updateMessageBoard: " + id + " messageBoard: " + messageBoard);
         Device device = deviceRepository.findById(id).orElseThrow(() -> new RuntimeException());
         Record record = new Record();
         record.setDevice(device);
         record.setMessage(messageBoard.getMessage());
         record.setRecordType(RecordType.MESSAGE_BOARD);
+
+
+        // convert text to 1bit pixel
+        byte[][] data = Font2ImageUtil.text2Parola(messageBoard.getMessage(), 18);
+
+        assert data != null;
+        messageBoard.setTextPixelBase64(Base64.getEncoder().encodeToString(data[0]));
+        messageBoard.setTextPixel2Base64(Base64.getEncoder().encodeToString(data[1]));
+
         recordRepository.saveAndFlush(record);
 
         // MQTT send command to IoT
