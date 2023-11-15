@@ -13,6 +13,18 @@ public class ImageUtil {
         }
     }
 
+    public static BufferedImage padding(BufferedImage bufferedImage, int p) {
+        BufferedImage newImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight() + p, bufferedImage.getType());
+
+        Graphics g = newImage.getGraphics();
+
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, newImage.getWidth(), newImage.getHeight());
+        g.drawImage(bufferedImage, 0, p, null);
+        g.dispose();
+        return newImage;
+    }
+
 
     public static byte[] convert1BitByteArray(BufferedImage bufferedImage) {
         int width = bufferedImage.getWidth();
