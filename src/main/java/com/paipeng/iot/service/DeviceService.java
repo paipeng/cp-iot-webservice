@@ -109,10 +109,10 @@ public class DeviceService extends BaseService {
 
 
         // convert text to 1bit pixel
-        byte[][] data = Font2ImageUtil.text2Parola(messageBoard.getMessage(), 18);
+        byte[][] data = Font2ImageUtil.text2Parola(messageBoard.getMessage(), 14);
 
         assert data != null;
-        ImageUtil.printParolaMatrix(data, 16);
+        ImageUtil.printParolaMatrix(data, 12);
         messageBoard.setTextPixelBase64(Base64.getEncoder().encodeToString(data[0]));
         messageBoard.setTextPixel2Base64(Base64.getEncoder().encodeToString(data[1]));
 
