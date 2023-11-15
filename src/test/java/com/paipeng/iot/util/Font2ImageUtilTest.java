@@ -32,7 +32,7 @@ public class Font2ImageUtilTest {
     @Test
     void text2PixelParolaDataFormat() throws IOException, FontFormatException {
         String text = "你好-鹏龘,";
-        text = "彭";
+        text = "老婆,我爱你";
         byte[][] data = Font2ImageUtil.text2Parola(text, 16+2);
         Assertions.assertNotNull(data);
         System.out.println("byte data size: " + data.length);

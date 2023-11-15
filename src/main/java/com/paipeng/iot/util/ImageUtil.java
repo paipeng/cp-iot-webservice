@@ -139,40 +139,80 @@ public class ImageUtil {
         System.out.println(" ");
     }
 
+    private static int[] calculateParolaWordPosition(byte[] data) {
+        int word = 0;
+        int column = 0;
+        int columnTotal = 0;
+        for (int i = 0; i < data.length; i++) {
+            if (i == 0) {
+                column = data[i];
+                if (column > 0) {
+                    word++;
+                }
+                columnTotal += (column + 1);
+            } else if (i == columnTotal) {
+                column = data[i];
+                if (column > 0) {
+                    word++;
+                }
+                columnTotal += (column + 1);
+            }
+        }
+
+        int[] wordPositions = new int[word];
+        int k = 0;
+        columnTotal = 0;
+        for (int i = 0; i < data.length; i++) {
+            if (i == 0) {
+                wordPositions[k++] = i;
+                columnTotal += ( data[i] + 1);
+            } else if (i == columnTotal) {
+                wordPositions[k++] = i;
+                columnTotal += (data[i] + 1);
+            }
+        }
+        return wordPositions;
+    }
 
     public static void printParolaMatrix(byte[][] data, int font_size) {
         System.out.println(HexFormat.of().formatHex(data[0]));
         System.out.println(HexFormat.of().formatHex(data[1]));
 
-        int column = (data[0][0] > data[1][0]) ? data[0][0]: data[1][0];
-        System.out.println("column: " + column);
+        // word count
+        int[] wordPositions = calculateParolaWordPosition(data[0]);
 
-        int[][] pixels = new int[font_size][column];
-        // data[0]:  upper 8x16
-        // data[1]:  lower 8x16
+        System.out.println("word count: " + wordPositions.length);
 
-        for (int i = 1; i <= column; i++) {
-            // upper
-            if (i < data[0].length) {
-                for (int j = 0; j < font_size/2; j++) {
-                    //System.out.println("i: " + i + " j: " + j);
-                    pixels[j][i-1] = ((data[0][i] >> j) & 0x1);
+        for (int k = 0; k < wordPositions.length; k++) {
+            int column =data[0][wordPositions[k]];
+            System.out.println("column: " + column);
+            int[][] pixels = new int[font_size][column];
+            // data[0]:  upper 8x16
+            // data[1]:  lower 8x16
+
+            for (int i =1; i <= column; i++) {
+                // upper
+                if (i < data[0].length) {
+                    for (int j = 0; j < font_size / 2; j++) {
+                        //System.out.println("i: " + i + " j: " + j);
+                        pixels[j][i - 1] = ((data[0][i +  wordPositions[k]] >> j) & 0x1);
+                    }
+                }
+                // lower
+                if (i < data[1].length) {
+                    for (int j = 0; j < font_size / 2; j++) {
+                        pixels[j + font_size / 2][i - 1] = (((data[1][i +  wordPositions[k]] & 0xFF - 0) >> j) & 0x1);
+                    }
                 }
             }
-            // lower
-            if (i < data[1].length) {
-                for (int j = 0; j < font_size/2; j++) {
-                    pixels[j + font_size/2][i-1] = (((data[1][i] & 0xFF - 0) >> j) & 0x1);
-                }
-            }
-        }
 
-        for (int i = 0; i < font_size; i++) {
-            for (int j = 0; j < column; j++) {
-                System.out.print(pixels[i][j] + " ");
+            for (int i = 0; i < font_size; i++) {
+                for (int j = 0; j < column; j++) {
+                    System.out.print(pixels[i][j] + " ");
+                }
+                System.out.println();
             }
-            System.out.println();
+            System.out.println(" ");
         }
-        System.out.println(" ");
     }
 }
