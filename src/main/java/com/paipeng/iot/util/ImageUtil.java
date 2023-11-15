@@ -99,12 +99,14 @@ public class ImageUtil {
 
         for (int i = 0, k = 1; i < width && k < col_size + 1; i++) {
             if (col_pixel[i] != 0) {
+                // upper
                 for (int j = 0; j < height / 2; j++) {
                     int pixel = bufferedImage.getRGB(i, j);
                     int bit = (pixel & 0xFF) / 255;
                     System.out.print(bit + " ");
                     data[0][k] += (byte) ((bit & 0x1) << j);
                 }
+                // lower
                 for (int j = height / 2; j < height; j++) {
                     int pixel = bufferedImage.getRGB(i, j);
                     int bit = (pixel & 0xFF) / 255;
