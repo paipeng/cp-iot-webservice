@@ -208,7 +208,7 @@ public class ImageUtil {
 
             for (int i = 0; i < font_size; i++) {
                 for (int j = 0; j < column; j++) {
-                    System.out.print(pixels[i][j] + " ");
+                    System.out.print((pixels[i][j]==1?"X":" ") + " ");
                 }
                 System.out.println();
             }
